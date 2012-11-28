@@ -24,7 +24,7 @@ module.exports = {
 			response.end(controlPage);
 		}).listen(port);
 
-		io = socketio.listen(server, {"log level": 1});
+		io = socketio.listen(server, {"log level": 0});
 		io.sockets.on("connection", function(sock) {
 			p.status = "open";
 			socket = sock;
@@ -37,6 +37,10 @@ module.exports = {
 			});
 			socket.on("res", responseHandler);
 			callback(p);
+		});
+		
+		io.sockets.on("error", function (reason) {
+			console.error("Ghostbuster socket error: " + reason);
 		});
 
 		phantom = spawn("phantomjs", [bridge, port]);
@@ -174,7 +178,13 @@ function getControlPage() {
 	var html = "<html><head><script src=\"/socket.io/socket.io.js\"></script><script>";
 	html += "var socket;";
 	html += "window.onload = function() {";
-	html += " socket = new io.connect(\"http://\" + window.location.hostname);"
+	html += " socket = new io.connect(\"http://\" + window.location.hostname, {";
+	html += "   'connect timeout': 500,";
+    html += "   'reconnect': true,";
+    html += "   'reconnection delay': 500,";
+    html += "   'reopen delay': 500,";
+    html += "   'max reconnection attempts': 10";
+	html += " });";
 	html += " socket.on(\"cmd\", function(msg) {";
 	html += "  alert(msg);";
 	html += " });";
