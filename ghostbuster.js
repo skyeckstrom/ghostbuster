@@ -180,10 +180,10 @@ function getControlPage() {
 	html += "window.onload = function() {";
 	html += " socket = new io.connect(\"http://\" + window.location.hostname, {";
 	html += "   'connect timeout': 500,";
-    html += "   'reconnect': true,";
-    html += "   'reconnection delay': 500,";
-    html += "   'reopen delay': 500,";
-    html += "   'max reconnection attempts': 10";
+	html += "   'reconnect': true,";
+	html += "   'reconnection delay': 500,";
+	html += "   'reopen delay': 500,";
+	html += "   'max reconnection attempts': 10";
 	html += " });";
 	html += " socket.on(\"cmd\", function(msg) {";
 	html += "  alert(msg);";
